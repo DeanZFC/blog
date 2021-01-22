@@ -1,0 +1,63 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    # gateway配置
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+      routes:
+        - id: auth_router
+          uri: lb://lazypigblog-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /$\{segment}
+
+        - id: user_router
+          uri: lb://lazypigblog-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - RewritePath=/api/user/(?<segment>.*), /$\{segment}
+
+        - id: article_router
+          uri: lb://lazypigblog-article
+          predicates:
+            - Path=/api/article/**
+          filters:
+            - RewritePath=/api/article/(?<segment>.*), /$\{segment}
+
+  # spring security配置
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8888/api/auth/rsa/publicKey' #配置RSA的公钥访问地址
+  # redis 配置
+  redis:
+    database: 0
+    port: 6379
+    host: 192.168.1.112
+
+# 自定义配置
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/doc.html"
+      - "/swagger-resources/**"
+      - "/swagger/**"
+      - "/**/v2/api-docs"
+      - "/**/*.js"
+      - "/**/*.css"
+      - "/**/*.png"
+      - "/**/*.ico"
+      - "/webjars/springfox-swagger-ui/**"
+      - "/**/actuator/**"
+      - "/**/oauth/token"
+      - "/**/rsa/publicKey"
+      - "/**/user/login"
+      - "/**/admin/login"
+      - "/**/admin/register"

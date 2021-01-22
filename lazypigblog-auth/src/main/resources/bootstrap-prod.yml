@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 116.62.110.148:8848
+        namespace: d376b5d5-a833-435e-a432-7321d85fae11
+      config:
+        server-addr: 116.62.110.148:8848
+        file-extension: yaml
+        namespace: d376b5d5-a833-435e-a432-7321d85fae11
+        group: prod

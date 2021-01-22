@@ -1,0 +1,57 @@
+server:
+  port: 9200
+
+spring:
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #MySQL配置
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.112:3306/blog_article?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    # druid配置
+    druid:
+      initial-size: 5 #连接池初始化大小
+      min-idle: 10 #最小空闲连接数
+      max-active: 20 #最大连接数
+      web-stat-filter:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
+      stat-view-servlet: #访问监控网页的登录用户名和密码
+        login-username: druid
+        login-password: druid
+
+  #全局配置 Date类型返回指定时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# mybatis xml文件扫描路径
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
+    - classpath:dao/*.xml
+
+# feign配置
+feign:
+  httpclient:
+    enabled: false # 关闭httpclient
+  okhttp:
+    enabled: true # 使用okhttp
+# ribbon 配置
+ribbon:
+  OkToRetryOnAllOperations: false # 对所有操作请求都进行重试,默认false
+  ReadTimeout: 10000   # 负载均衡超时时间，默认值5000
+  ConnectTimeout: 10000 # ribbon请求连接的超时时间，默认值2000
+  MaxAutoRetries: 0     # 对当前实例的重试次数，默认0
+  MaxAutoRetriesNextServer: 1 # 对切换实例的重试次数，默认1
+
+#开启SpringBoot Admin的监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
